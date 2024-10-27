@@ -1,0 +1,33 @@
+version: '3'
+services:
+  catalog-service:
+    build: ./catalog-service
+    ports:
+      - "3000:3000"
+    networks:
+      - book_store_network
+    volumes:
+      - /catalog-service
+      
+  order-service:
+    build: ./order-service
+    ports:
+      - "3001:3001"
+    networks:
+      - book_store_network
+    depends_on:
+      - catalog-service
+
+  frontend-service:
+    build: ./frontend-service
+    ports:
+      - "80:80"
+    networks:
+      - book_store_network
+    depends_on:
+      - catalog-service
+      - order-service
+
+networks:
+  book_store_network:
+    driver: bridge
